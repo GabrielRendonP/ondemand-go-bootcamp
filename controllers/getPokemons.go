@@ -3,13 +3,11 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-
-	"github.com/GabrielRendonP/ondemand-go-bootcamp/helpers"
 )
 
-func GetPokemons(w http.ResponseWriter, r *http.Request) {
+func (c controller) GetPokemons(w http.ResponseWriter, r *http.Request) {
 
-	pokeList, err := helpers.GetAllPokemons()
+	pokeList, err := c.s.GetAllPokemons()
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
