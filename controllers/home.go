@@ -1,13 +1,18 @@
 package controllers
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/GabrielRendonP/ondemand-go-bootcamp/helpers"
+)
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(
-		`{"endpoints": {
-			"index":"/pokemons",
-			"show":"/pokemon?id="
-		}
-	}`))
+	helpers.RenderTemplate(w, "../templates/home.gohtml")
+	// w.WriteHeader(http.StatusOK)
+	// w.Write([]byte(
+	// 	`{"endpoints": {
+	// 		"index":"/pokemons",
+	// 		"show":"/pokemon?id="
+	// 	}
+	// }`))
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/GabrielRendonP/ondemand-go-bootcamp/controllers"
@@ -16,6 +17,14 @@ func main() {
 	http.HandleFunc("/", controllers.Home)
 	http.HandleFunc("/pokemons", nc.GetPokemons)
 	http.HandleFunc("/pokemon", nc.GetPokemon)
+	http.HandleFunc("/index", nc.PokemonIndex)
+	http.HandleFunc("/save", nc.SavePokeApi)
 
-	_ = http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil) // implement graceful shutdown
+
+	if err != nil {
+		log.Fatal("error!!!")
+		return
+	}
+
 }
