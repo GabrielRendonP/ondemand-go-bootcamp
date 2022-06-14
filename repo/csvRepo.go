@@ -3,7 +3,6 @@ package repo
 import (
 	"encoding/csv"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,43 +10,34 @@ import (
 	"strconv"
 
 	"github.com/GabrielRendonP/ondemand-go-bootcamp/entities"
+	"github.com/GabrielRendonP/ondemand-go-bootcamp/helpers"
 )
 
 type localData struct{}
 
+// Defines interface for local repo
 type LocalDataInterface interface {
 	ReadCSVData() ([][]string, error)
 	GetAllPokemonsApi() []entities.Pokemon
 	SaveToCsv([]entities.Pokemon) error
 }
 
+// Instantiates new localdata struct
 func NewLocalData() LocalDataInterface {
 	return &localData{}
 }
 
-// Probably should go in a driver
+// ReadCsvData calls helper method that access csv file
 func (r localData) ReadCSVData() ([][]string, error) {
-	var data [][]string
-
-	file, err := os.Open("./lib/pokemon.csv")
-	if err != nil {
-		fmt.Println("is this error")
-		return nil, err
-	}
-
-	defer file.Close()
-
-	csvReader := csv.NewReader(file)
-	data, err = csvReader.ReadAll()
-
+	results, err := helpers.ReadCSV()
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
 	}
-
-	return data, nil
+	return results, nil
 }
 
+// GetAllPokemonsApi makes exteneral api request and returns a pokemon list
 func (r localData) GetAllPokemonsApi() []entities.Pokemon {
 	response, _ := r.getApiResponse("https://pokeapi.co/api/v2/pokedex/1")
 
@@ -74,6 +64,7 @@ func (r localData) GetAllPokemonsApi() []entities.Pokemon {
 	return pokeList
 }
 
+// SaveToCsv creates a new csv file to store pokemon list
 func (r localData) SaveToCsv(list []entities.Pokemon) error {
 	csvFile, err := os.Create("./lib/pokemonsFromApi.csv")
 

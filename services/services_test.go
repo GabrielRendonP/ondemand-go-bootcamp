@@ -1,9 +1,10 @@
 package services
 
 import (
+	"github.com/GabrielRendonP/ondemand-go-bootcamp/entities"
+
 	"testing"
 
-	"github.com/GabrielRendonP/ondemand-go-bootcamp/entities"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

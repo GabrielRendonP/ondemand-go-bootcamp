@@ -1,9 +1,12 @@
 package entities
 
+// Pokemon data struct
 type Pokemon struct {
 	Number string
 	Name   string
 }
+
+// Response data struct
 type Response struct {
 	PokeList []Poke `json:"pokemon_entries"`
 }

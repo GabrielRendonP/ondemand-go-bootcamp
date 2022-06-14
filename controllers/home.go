@@ -8,11 +8,4 @@ import (
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	helpers.RenderTemplate(w, "../templates/home.gohtml")
-	// w.WriteHeader(http.StatusOK)
-	// w.Write([]byte(
-	// 	`{"endpoints": {
-	// 		"index":"/pokemons",
-	// 		"show":"/pokemon?id="
-	// 	}
-	// }`))
 }

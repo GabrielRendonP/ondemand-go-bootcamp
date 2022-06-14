@@ -24,6 +24,7 @@ func NewService(r repo.LocalDataInterface) ServiceInterface {
 	return &service{r}
 }
 
+// GetAllPokemons service layer method, returns pokemon from csv file
 func (s service) GetAllPokemons() ([]entities.Pokemon, error) {
 	data, err := s.r.ReadCSVData()
 	if err != nil {
@@ -47,6 +48,7 @@ func (s service) GetAllPokemons() ([]entities.Pokemon, error) {
 	return pokeList, nil
 }
 
+// GetAllPokemons service layer method, returns pokemon from csv file
 func (s service) GetPokemon(id string) (entities.Pokemon, error) {
 	pokeList, err := s.GetAllPokemons()
 
@@ -64,12 +66,14 @@ func (s service) GetPokemon(id string) (entities.Pokemon, error) {
 	return entities.Pokemon{}, fmt.Errorf("pokemon with id %s not found", id)
 }
 
+// GetAllPkemonsFromApi service layer method, gets pokemon from external api call
 func (s service) GetAllPokemonsFromApi() ([]entities.Pokemon, error) {
 	list := s.r.GetAllPokemonsApi()
 	var newError error
 	return list, newError
 }
 
+// SaveToCsv service layer mathod, save pokemon data list to csv file
 func (s service) SaveToCsv(list []entities.Pokemon) error {
 	err := s.r.SaveToCsv(list)
 
