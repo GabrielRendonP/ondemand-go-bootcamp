@@ -1,21 +1,21 @@
 package controllers
 
-import "github.com/GabrielRendonP/ondemand-go-bootcamp/entities"
+import (
+	"net/http"
 
+	"github.com/GabrielRendonP/ondemand-go-bootcamp/services"
+)
+
+type GetterInterface interface {
+	GetPokemon(http.ResponseWriter, *http.Request)
+	GetPokemons(http.ResponseWriter, *http.Request)
+	PokemonIndex(http.ResponseWriter, *http.Request)
+	SavePokeApi(http.ResponseWriter, *http.Request)
+}
 type controller struct {
-	s bigController
+	s services.ServiceInterface
 }
 
-// Here I can define getters, setters, deleter and all other methods
-type bigController interface {
-	getter
-}
-
-type getter interface {
-	GetAllPokemons() ([]entities.Pokemon, error)
-	GetPokemon(id string) (entities.Pokemon, error)
-}
-
-func NewController(s bigController) controller {
-	return controller{s}
+func NewController(s services.ServiceInterface) GetterInterface {
+	return &controller{s}
 }
