@@ -19,8 +19,9 @@ func main() {
 	http.HandleFunc("/pokemon", nc.GetPokemon)
 	http.HandleFunc("/index", nc.PokemonIndex)
 	http.HandleFunc("/save", nc.SavePokeApi)
+	http.HandleFunc("/concurrentRead", nc.ConcurrentRead)
 
-	err := http.ListenAndServe(":8080", nil) // implement graceful shutdown
+	err := http.ListenAndServe(":8080", nil)
 
 	if err != nil {
 		log.Fatal("error!!!")

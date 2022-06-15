@@ -1,8 +1,10 @@
 package repo
 
 import (
+	"context"
 	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,6 +13,7 @@ import (
 
 	"github.com/GabrielRendonP/ondemand-go-bootcamp/entities"
 	"github.com/GabrielRendonP/ondemand-go-bootcamp/helpers"
+	"github.com/GabrielRendonP/ondemand-go-bootcamp/worker"
 )
 
 type localData struct{}
@@ -20,6 +23,7 @@ type LocalDataInterface interface {
 	ReadCSVData() ([][]string, error)
 	GetAllPokemonsApi() []entities.Pokemon
 	SaveToCsv([]entities.Pokemon) error
+	ConcurrentRead(int, int, string) (*entities.DataResponse, error)
 }
 
 // Instantiates new localdata struct
@@ -87,6 +91,43 @@ func (r localData) SaveToCsv(list []entities.Pokemon) error {
 	csvFile.Close()
 
 	return nil
+}
+
+// ConcurrentRead reads a csv file based on max items, items per worker and even or odd type param
+func (r localData) ConcurrentRead(ipw int, items int, types string) (*entities.DataResponse, error) {
+	var resList [][]string
+
+	list, _ := helpers.ReadCSV()
+	filtered := helpers.Filter(list, types)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	jobsNum := helpers.CapMaxItems(len(filtered), items)
+
+	if !worker.CanBeDone(ipw, jobsNum) {
+		cancel()
+		return nil, fmt.Errorf("not enough items per worker for total amount of work")
+	}
+
+	jobs := make(chan []string, jobsNum)
+	results := make(chan []string)
+
+	var w worker.Worker
+	w.WorkerPool(ipw, jobs, results, ctx, cancel)
+	w.CreateJobs(jobs, filtered, jobsNum)
+
+	for i := 0; i < jobsNum; i++ {
+		res := <-results
+		resList = append(resList, res)
+	}
+
+	close(results)
+	response := entities.DataResponse{
+		ResponseSize: len(resList),
+		Ipw:          ipw,
+		Types:        types,
+		Data:         resList,
+	}
+	return &response, nil
 }
 
 func (r localData) getApiResponse(urlPath string) (*http.Response, error) {

@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// RenderTemplate renders an html template passed by param
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	parsedTemplate, _ := template.ParseFiles("./templates/" + tmpl)
 	err := parsedTemplate.Execute(w, nil)
