@@ -17,3 +17,11 @@ type Poke struct {
 type PokemonSpecies struct {
 	Name string `json:"name"`
 }
+
+// DataResponse for concurrent read
+type DataResponse struct {
+	ResponseSize int
+	Ipw          int
+	Types        string
+	Data         [][]string
+}
