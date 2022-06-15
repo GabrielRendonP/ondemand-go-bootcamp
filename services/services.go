@@ -14,6 +14,7 @@ type ServiceInterface interface {
 	GetPokemon(string) (entities.Pokemon, error)
 	GetAllPokemonsFromApi() ([]entities.Pokemon, error)
 	SaveToCsv([]entities.Pokemon) error
+	ConcurrentRead(int, int, string) (*entities.DataResponse, error)
 }
 type service struct {
 	r repo.LocalDataInterface
@@ -81,4 +82,13 @@ func (s service) SaveToCsv(list []entities.Pokemon) error {
 		return err
 	}
 	return nil
+}
+
+// Calls concurrent read function from repo layer,
+func (s service) ConcurrentRead(ipw int, items int, types string) (*entities.DataResponse, error) {
+	list, err := s.r.ConcurrentRead(ipw, items, types)
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
 }

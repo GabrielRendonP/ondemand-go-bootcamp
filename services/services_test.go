@@ -33,6 +33,10 @@ func (r MockLocalData) GetAllPokemonsApi() []entities.Pokemon {
 	return pokemons
 }
 
+func (r MockLocalData) ConcurrentRead(int, int, string) (*entities.DataResponse, error) {
+	return nil, nil
+}
+
 // Test methods
 func TestGetAllPokemons(t *testing.T) {
 	repo := MockLocalData{}
